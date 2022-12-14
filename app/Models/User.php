@@ -18,10 +18,14 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'name',
         'email',
         'password',
-        'role',
-        'photo_profile',
+        'address',
+        'phone_number',
+        'gender',
+        'image',
+        'level_id',
     ];
 
     /**
@@ -43,11 +47,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function admin(){
-        return $this->hasOne(Admin::class);
+    public function level(){
+        return $this->belongsTo(Level::class);
+    }
+    
+    public function cart(){
+        return $this->hasOne(Cart::class);
     }
 
-    public function customer(){
-        return $this->hasOne(Customer::class);
+    public function order(){
+        return $this->hasMany(Order::class);
     }
+
+
 }

@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+// use Auth;
 
 class LoginController extends Controller
 {
@@ -27,18 +28,8 @@ class LoginController extends Controller
      *
      * @var string
      */
-    // protected $redirectTo = RouteServiceProvider::HOME;
-    public function redirectTo() {
-        $role = Auth::user()->role; 
-        switch ($role) {
-          case 'admin':
-            return '/u/dashboard';
-            break;
-          default:
-            return '/u/add_profile'; 
-          break;
-        }
-    }
+    protected $redirectTo = RouteServiceProvider::HOME;
+
     /**
      * Create a new controller instance.
      *
@@ -47,5 +38,24 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+    public function login(Request $request)
+    {
+        $input = $request->all();
+        $this->validate($request,[
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if(auth()->attempt(['email' => $input['email'], 'password' => $input['password']]))
+        {
+            if(auth()->user()->level_id == 1){
+                return redirect()->to('/admin/home');
+            } else{
+                return redirect()->route('home');
+            }
+        } else{
+            return redirect()->route('login')->with('error','Email Atau Password Salah');
+        }
     }
 }

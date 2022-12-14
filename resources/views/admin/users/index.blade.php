@@ -1,84 +1,82 @@
 @extends('admin.layouts.main')
-
 @section('content')
-<!-- Begin Page Content -->
-<div class="container fs-normal">
-
-  <!-- Page Heading -->
-  <p class="mb-3">Tabel / Data / <span class="color-primary">{{ $title }}</span></p>
-
+<div class="page-breadcrumb">
+  <div class="row align-items-center">
+    <div class="col-md-6 col-8 align-self-center">
+      <h3 class="page-title mb-0 p-0">Table User</h3>
+      <div class="d-flex align-items-center">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/user">Home</a></li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <div class="col-md-6 col-4 align-self-center">
+      <div class="text-end upgrade-btn">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
   @if(session('success'))
     <div class="alert alert-success">
       {{session('success')}}
     </div>
   @endif
   @if(session('danger'))
-  <div class="alert alert-danger">
-    {{session('danger')}}
-  </div>
+    <div class="alert alert-danger">
+      {{session('danger')}}
+    </div>
   @endif
+  <div class="row">
+    <!-- column -->
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Table User</h4>
+          <h6 class="card-subtitle">List Table <code>User</code></h6>
+          <div class="table-responsive">
+            <table class="table user-table no-wrap">
+              <thead>
+                <tr>
+                  <th class="border-top-0">#</th>
+                  <th class="border-top-0">Email User</th>
+                  <th class="border-top-0">Alamat</th>
+                  <th class="border-top-0">Nomer HP</th>
+                  <th class="border-top-0">Jenis Kelamin</th>
+                  {{-- <th class="border-top-0">Gambar</th> --}}
+                  <th class="border-top-0">Level</th>
+                  <th class="border-top-0">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($data as $item)
+                  <tr>
+                    <td>{{ $item->id }}</td>
+                    <td>{{ $item->email }}</td>
+                    <td>{{ $item->address }}</td>
+                    <td>{{ $item->phone_number }}</td>
+                    <td>{{ $item->gender }}</td>
+                    {{-- <td><img style="width: 50px; overflow:hidden" src="{{ asset('./assets/'. $item->image)}}" alt=""></td> --}}
+                    <td>{{ $item->level->level }}</td>
+                    <td>
+                      <form action="/admin/user/{{ $item->id }}" onsubmit="return confirm('Apakah anda yakin akan menghapus data?')" method="post">
+                      @csrf
+                      @method('DELETE')
 
-  <!-- DataTales Example -->
-  <div class="card shadow mb-5 border-0">
-    <div class="card-body">
-      <h5 class="m-0 font-weight-bold color-primary mb-2">Tabel Data {{ $title }}</h5>
-      <p class="mb-3 float-left">Halaman ini untuk pengelolaan {{ strtolower($title) }}</p>
-      @if ($title == 'Admins')          
-        <a href="/u/users/create" class="btn btn-primary py-2 px-3 fs-normal float-right mb-3 shadow-sm"><span class="fas fa-user-plus"></span> Tambah Data</a>
-      @endif
-      
-      <div class="table-responsive">
-        <table class="table table-striped" id="dataTable" width="100%" cellspacing="0">
-          <thead>
-            <tr>
-              <th class="text-center">NO</th>
-              <th>Nama</th>
-              <th>Email</th>
-              <th>Telp</th>
-              <th>Alamat</th>
-              <th>Kode Pos</th>
-              <th>JK</th>
-              <th class="text-center">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($users as $row)
-            <tr>
-              <td class="text-center">{{ $loop->iteration }}</td>
-              <td>{{ $row->name }}</td>
-              <td>{{ $row->user->email }}</td>
-              <td>{{ ($row->phone_number == NULL) ? 'NULL' : $row->phone_number }}</td>
-              <td>{{ ($row->address == NULL) ? 'NULL' : $row->address }}</td>
-              <td>{{ ($row->zip_code == NULL) ? 'NULL' : $row->zip_code }}</td>
-              <td>{{ ($row->gender == 'L') ? 'Laki-laki' : 'Perempuan' }}</td>
-              <td class="text-center">
-                @if ($title == 'Admins')     
-                  <a href="/u/admins/{{ $row->user_id }}/edit" class="btn fs-small btn-info text-decoration-none">
-                    <span class="fa fa-fw fa-syringe mx-1"></span>
-                    Edit
-                  </a>
-                @endif 
-                
-                @if ($title == 'Customers')  
-                  <form action="/u/users/{{ $row->user_id }}" onsubmit="return confirm('Apakah anda yakin akan menghapus data?')" method="post">
-                    @csrf
-                    @method('DELETE')  
-
-                    <button type="submit" class="btn fs-small btn-danger">
-                      <span class="fa fa-fw fa-trash mx-1"></span>
-                    Hapus
-                    </button>
-                  </form>
-                @endif
-              </td>
-            </tr>
-            @endforeach
-          </tbody>
-        </table>
+                      <a href="/admin/user/{{ $item->id }}/edit" class="btn btn-info btn-sm text-light">Edit</a>
+                      <button type="submit" class="btn btn-danger btn-sm text-light">Hapus</button>
+                      </form>
+                    </td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
 </div>
-<!-- /.container-fluid -->
 @endsection

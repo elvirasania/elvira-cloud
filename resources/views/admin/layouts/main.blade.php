@@ -1,93 +1,55 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="Bayu Fajariyanto">
-  
-  <title>BOOKSTORE 2022 | {{ auth()->user()->role }}</title>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords"
+      content="wrappixel, admin dashboard, html css dashboard, web dashboard, bootstrap 5 admin, bootstrap 5, css3 dashboard, bootstrap 5 dashboard, Monsterlite admin bootstrap 5 dashboard, frontend, responsive bootstrap 5 admin template, Monster admin lite design, Monster admin lite dashboard bootstrap 5 dashboard template">
+    <meta name="description"
+      content="Monster Lite is powerful and clean admin dashboard template, inpired from Bootstrap Framework">
+    <meta name="robots" content="noindex,nofollow">
+    <title> Halaman Admin</title>
+    <link rel="canonical" href="https://www.wrappixel.com/templates/monster-admin-lite/" />
+    <!-- Favicon icon -->
+    <!-- <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('admin/images/favicon.png') }}"> -->
+    <!-- Custom CSS -->
+    <link href="{{ asset('admin/plugins/chartist/dist/chartist.min.css') }}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ asset('admin/css/style.min.css') }}" rel="stylesheet">
+    <![endif]-->
+  </head>
+  <body>
+    <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+      data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
+    
+      @include('admin.includes.navbar')
 
-  
-  <!-- Custom fonts for this template-->
-  <link href="{{ asset('/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-  
-  <!-- Custom styles for this template-->
-  <link href="{{ asset('/css/sb-admin-2.min.css') }}" rel="stylesheet">
-  <link href="{{ asset('/ui/css/utilities.css') }}" rel="stylesheet">
-  <link href="{{ asset('/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-  
-  <link rel="icon" type="image/x-icon" href="{{ asset('/img/posyandu/logo.ico') }}" />
-</head>
-
-<body id="page-top">
-
-  <!-- Page Wrapper -->
-  <div id="wrapper">
-
-    <!-- sidebar -->
-    @include('admin.partials.sidebar')
-    <!-- sidebar -->
-
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-
-      <!-- Main Content -->
-      <div id="content" class="bg-light color-dark">
-        
-        <!-- top-navbar -->
-        @include('admin.partials.top-navbar')
-        <!-- top-navbar -->
-
+      @include('admin.includes.sidebar')
+      
+      <div class="page-wrapper">
         @yield('content')
-
       </div>
-      <!-- End of Main Content -->
       
-      <!-- footer -->
-      @include('admin.partials.footer')
-      <!-- footer -->
-      
-
+      @include('admin.includes.footer')
+     
     </div>
-    <!-- End of Content Wrapper -->
-
-  </div>
-  <!-- End of Page Wrapper -->
-
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
-  <!-- Scroll to Top Button-->
-  
-  <!-- Modal-->
-  @include('admin.partials.logout')
-  <!-- Modal-->
-  
-
-  <!-- Bootstrap core JavaScript-->
-  <script src="{{ asset('/vendor/jquery/jquery.min.js') }}"></script>
-  <script src="{{ asset('/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-  <!-- Core plugin JavaScript-->
-  <script src="{{ asset('/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-
-  <!-- Custom scripts for all pages-->
-  <script src="{{ asset('/js/sb-admin-2.min.js') }}"></script>
-
-  <!-- Page level plugins -->
-  
-  <script src="{{ asset('/vendor/datatables/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ asset('/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-
-  <!-- Page level custom scripts -->
-  {{-- <script src="{{ asset('/js/demo/chart-area-demo.js') }}"></script>
-  <script src="{{ asset('/js/demo/chart-pie-demo.js') }}"></script> --}}
-  <script src="{{ asset('/ui/js/datatables-demo.js') }}"></script>
-
+   
+  <script src="{{ asset('admin/plugins/jquery/dist/jquery.min.js') }}"></script>
+  <!-- Bootstrap tether Core JavaScript -->
+  <script src="{{ asset('admin/plugins/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('admin/js/app-style-switcher.js') }}"></script>
+  <!--Wave Effects -->
+  <script src="{{ asset('admin/js/waves.js') }}"></script>
+  <!--Menu sidebar -->
+  <script src="{{ asset('admin/js/sidebarmenu.js') }}"></script>
+  <!--Custom JavaScript -->
+  <script src="{{ asset('admin/js/custom.js') }}"></script>
+  <!--This page JavaScript -->
+  <!--flot chart-->
+  <script src="{{ asset('admin/plugins/flot/jquery.flot.js') }}"></script>
+  <script src="{{ asset('admin/plugins/flot.tooltip/js/jquery.flot.tooltip.min.js') }}"></script>
+  <script src="{{ asset('admin/js/pages/dashboards/dashboard1.js') }}"></script>
 </body>
-
 </html>

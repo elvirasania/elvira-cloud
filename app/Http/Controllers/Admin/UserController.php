@@ -3,122 +3,144 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin;
-use App\Models\Customer;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\level;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function add()
+    public function __construct()
     {
-        Customer::create([
-            'user_id' => auth()->user()->id,
-            'name' => auth()->user()->email,
-            'phone_number' => NULL,
-            'address' => NULL,
-            'zip_code' => NULL
-        ]);
-        
-        return redirect()->to('/');
+        $this->middleware('auth');
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $data = User::all();
+        return view('admin.users.index', compact('data'));
     }
 
-    public function get_admin(){
-        $title = 'Admins';
-        $users = Admin::with('user')->get();
-        return view('admin.users.index', compact('users', 'title'));
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $level = level::all();
+        return view('admin.users.create',['level'=>$level]);
     }
 
-    public function get_customer(){
-        $title = 'Customers';
-        $users = Customer::with('user')->get();
-        return view('admin.users.index', compact('users', 'title'));
-    }
-
-    public function create(){
-        $title = 'Admins';
-        return view('admin.users.create', compact('title'));
-    }
-
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|max:255|unique:users',
-            'password' => 'required|string|min:6',
-            'password_confirmation' => 'required|string|min:6|confirmed',
-            'role' => 'required',
-            'name' => 'required|string|max:50',
-            'phone_number' => 'required|string|min:11',
-            'gender' => 'required',
-            'address' => 'required',
-            'zip_code' => 'required|string',
+            'Name'=>'required',
+            'Email'=>'required',
+            'Address'=>'required',
+            'Phone_number'=>'required',
+            'Gender'=>'required',
+            'Image'=>'required',
+            'Level_id',
         ]);
 
-        User::create([
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-        ]);
-        
-        $user = User::latest()->first();
+        if($request->file('Image')){
+            $image_name=$request->file('Image')->store('images','public');
+        }
 
-        Admin::create([
-            'user_id' => $user->id,
-            'name' => $request->name,
-            'phone_number' => $request->phone_number,
-            'gender' => $request->gender,
-            'address' => $request->address,
-            'zip_code' => $request->zip_code,
-        ]);
+        $user = new user;
+        $user->name = $request->get('Name');
+        $user->email = $request->get('Email');
+        $user->address = $request->get('Address');
+        $user->phone_number = $request->get('Phone_number');
+        $user->gender = $request->get('Gender');
+        $user->image = $image_name;
+        //fungsi eloquent untuk menambahkan data
+        $level = new level;
+        $level->id = $request->get('level');
+
+        $user->level()->associate($level);
+        $user->save();
         
-        return redirect('/u/admins')->with('success', "Data berhasil diubah");
+        //jika data berhasil ditambahkan, akan kembali ke halaman utama
+        return redirect()->to('/admin/users')
+        ->with('success','Pelanggan Berhasil Ditambahakan');
     }
 
-    public function edit_admin($id)
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
     {
-        $title = 'Users';
-        $users = Admin::with('user')->where('user_id', $id)->first();
-        return view('admin.users.edit', compact('title', 'users'));
+        // 
     }
 
-    public function update_admin(Request $request, $id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
+        $item = user::where('id', $id)->first();
+        $level = level::all();
+        return view('admin.users.edit', compact('item','level'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        // dd('OK');
         $request->validate([
-            'role' => 'required',
-            'name' => 'required|string|max:50',
-            'phone_number' => 'required|string|min:11',
-            'gender' => 'required',
-            'address' => 'required',
-            'zip_code' => 'required|string',
-        ]);
-
-        Admin::where('user_id', $id)->update([
-            'name' => $request->name,
-            'phone_number' => $request->phone_number,
-            'gender' => $request->gender,
-            'address' => $request->address,
-            'zip_code' => $request->zip_code,
+            'name'=>'required',
+            'address'=>'required',
+            'phone_number'=>'required',
+            'gender'=>'required',
+            'level'=>'required',
         ]);
 
         User::where('id', $id)->update([
-            'role' => $request->role,
+            'name' => $request->name,
+            'address' => $request->address,
+            'phone_number' => $request->phone_number,
+            'gender' => $request->gender,
+            'level_id' => $request->level,
         ]);
-        
-        return redirect('/u/admins')->with('success', "Data berhasil diubah");
+
+        return redirect()->to('/admin/user')
+                        ->with('success','Pelanggan Berhasil Diupdate');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
-        $user = User::where('id', $id)->first();
-        if(Admin::where('user_id', $id)->first()){
-            Admin::where('user_id', $id)->delete();
-            // dd('hapus admin');
-        }else if(Customer::where('user_id', $id)->first()){
-            Customer::where('user_id', $id)->delete();
-            // dd('hapus customer');
-        }
         User::where('id', $id)->delete();
-        return redirect('/u'.'/'.$user->role.'s')->with('success', "Data berhasil dihapus");
+        return redirect()->to('/admin/user')
+                    ->with('success', 'Berhasi menghapus');
     }
 }

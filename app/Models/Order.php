@@ -8,25 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-
-    protected $primaryKey = 'id';
-    protected $fillable = [
-        'id',
-        'customer_id',
-        'admin_id',
-        'order_date',
-        'total',
-        'comments',
-        'status',
-    ];
-
+    protected $fillable = ['id', 'user_id', 'order_date', 'total', 'status'];
     public $incrementing = false;
 
-    public function customer(){
-        return $this->belongsTo(Customer::class, 'customer_id', 'id');
-    }
-
-    public function admin(){
-        return $this->belongsTo(Admin::class, 'admin_id', 'id');
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }
